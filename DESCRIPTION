@@ -1,0 +1,20 @@
+Package: bindr
+Title: Binds the return values of a function to variables
+Version: 0.0.0.9000
+Authors@R: person("Thomas", "Mailund",
+                  email = "mailund@birc.au.dk",
+                  role = c("aut", "cre"))
+Description: When a function returns more than one value it has to return the
+    values wrapped in a vector, list, or other composite type. This means that to
+    access variables in the returned values it is necessary to look them up. This
+    package provides a mechanism for binding return values in the form of vectors or
+    lists to (local) variables.
+Depends:
+    R (>= 3.3.1)
+License: GPL-3
+Encoding: UTF-8
+LazyData: true
+Suggests:
+    testthat,
+    roxygen2
+RoxygenNote: 5.0.1
