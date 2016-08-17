@@ -16,5 +16,5 @@ test_that("we can bind values by position", {
 })
 
 test_that("we get an error if we try to bind too many variables", {
-  expect_error(bind(a, b, c) %<% 1:2)
+  expect_error(bind(a, b, c) %<-% 1:2)
 })
