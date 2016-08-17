@@ -1,26 +1,27 @@
 #' Bind local variables to the return values of a function
 #'
 #' Bind return values from a function to local variables by combining the \code{bind}
-#' function with the %<% operator. When a function returns an object that is a vector
-#' or list you will normally have to index into that result to get individual components.
+#' function with the \code{\%<-\%} operator. When a function returns an object that is
+#' a vector or list you will normally have to index into that result to get individual
+#' components.
 #'
 #' Using \code{bind} you can values in a vector or list to local variables, so
 #'
-#' \code{bind(a, b, c) <- 1:3}
+#' \code{bind(a, b, c) \%<-\% 1:3}
 #'
 #' binds \code{a}, \code{b}, and \code{c} to values 1, 2, and 3, respectively.
 #'
 #' @param ...  List of variables to bind.
 #' @return     An object containing the variable to be bound. This should be used
-#'             in combination with the `%<%` operator to bind values to
+#'             in combination with the \code{\%<-\%} operator to bind values to
 #'             parameters.
 #'
 #' @examples
 #' f <- function(x, y) c(x, y)
-#' bind(a, b) %<% f(1, 2)
+#' bind(a, b) %<-% f(1, 2)
 #'
 #' g <- function(x, y) list(x, y)
-#' bind(a, b) %<% g(1, 2)
+#' bind(a, b) %<-% g(1, 2)
 #'
 #' @export
 bind <- function(...) {
@@ -42,26 +43,28 @@ bind <- function(...) {
 #' of the assignment.
 #'
 #' @param bindings   A bindings object returned by the \code{\link{bind}} function.
-#' @param values     Values in a list/vector to be bound to the variables.
+#' @param value      Values in a list/vector to be bound to the variables.
+#'
+#' @usage bindings \%<-\% value
 #'
 #' @examples
 #' f <- function(x, y) c(x, y)
-#' bind(a, b) %<% f(1, 2)
+#' bind(a, b) %<-% f(1, 2)
 #'
 #' g <- function(x, y) list(x, y)
-#' bind(a, b) %<% g(1, 2)
+#' bind(a, b) %<-% g(1, 2)
 #'
 #' @seealso \code{\link{bind}}
 #'
 #' @export
-`%<%` <- function(bindings, values) {
-  if (length(bindings$bindings) > length(values))
+`%<-%` <- function(bindings, value) {
+  if (length(bindings$bindings) > length(value))
     stop("More variables than values to bind.")
 
   for (i in seq_along(bindings$bindings)) {
     variable <- bindings$bindings[[i]]
-    value <- .unpack(values[i])
-    assign(as.character(variable), value, envir = bindings$scope)
+    val <- .unpack(value[i])
+    assign(as.character(variable), val, envir = bindings$scope)
   }
 }
 
