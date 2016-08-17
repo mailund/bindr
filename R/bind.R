@@ -7,7 +7,7 @@
 #'
 #' Using \code{bind} you can values in a vector or list to local variables, so
 #'
-#' \code{bind(a, b, c) \%<-\% 1:3}
+#' \code{bind(x, y, z) \%<-\% 1:3}
 #'
 #' binds \code{a}, \code{b}, and \code{c} to values 1, 2, and 3, respectively.
 #'
