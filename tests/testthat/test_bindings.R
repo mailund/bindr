@@ -19,7 +19,7 @@ test_that("we get an error if we try to bind too many variables", {
   expect_error(bind(a, b, c) %<-% 1:2)
 })
 
-test_that("we can bind values through expressoins", {
+test_that("we can bind values through expressions", {
   f <- function(x, y) c(x = x, y = y)
   g <- function(x, y) list(x = x, y = y)
 
@@ -73,4 +73,8 @@ test_that("we can bind values through expressoins", {
   expect_equal(a, 3*2)
   rm(a) ; rm(b)
 
+})
+
+test_that("we get an error if we try to bind an expression", {
+  expect_error(bind(2*a, b) %<-% 1:2)
 })
