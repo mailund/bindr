@@ -63,4 +63,14 @@ test_that("we can bind values through expressoins", {
   expect_equal(b, 3*2)
   rm(a) ; rm(b)
 
+  bind(b = 2*x, a = 3*y) %<-% f(1, 2)
+  expect_equal(a, 3*2)
+  expect_equal(b, 2*1)
+  rm(a) ; rm(b)
+
+  bind(b = 2*x, a = 3*y) %<-% g(1, 2)
+  expect_equal(b, 2*1)
+  expect_equal(a, 3*2)
+  rm(a) ; rm(b)
+
 })
