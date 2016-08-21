@@ -15,7 +15,7 @@ bind(a, b) %<-% f(1, 2)
 bind(a, b) %<-% g(1, 2)
 ```
 
-Values are just bound to local variables in the same order as they are given by the expression on the right-hand-side of `%<%`. If there are more values than variables, the remaining values are just discarded. For example, 
+Values are just bound to local variables in the same order as they are given by the expression on the right-hand-side of `%<-%`. If there are more values than variables, the remaining values are just discarded. For example, 
 
 ```r
 bind(a) %<-% f(1, 2)

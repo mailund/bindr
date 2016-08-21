@@ -30,9 +30,7 @@ bind <- function(...) {
   structure(list(bindings = bindings, scope = scope), class = "bindings")
 }
 
-.unpack <- function(x) UseMethod(".unpack")
-.unpack.default <-  function(x) x
-.unpack.list <- function(x) x[[1]]
+.unpack <- function(x) unname(unlist(x, use.names = FALSE))[1]
 
 #' Bind a `bind` object to values.
 #'
@@ -61,10 +59,30 @@ bind <- function(...) {
   if (length(bindings$bindings) > length(value))
     stop("More variables than values to bind.")
 
+  var_names <- names(bindings$bindings)
+  val_names <- names(value)
+  has_names <- which(nchar(val_names) > 0)
+  value_env <- list2env(as.list(value[has_names]), parent = bindings$scope)
+
   for (i in seq_along(bindings$bindings)) {
-    variable <- bindings$bindings[[i]]
-    val <- .unpack(value[i])
-    assign(as.character(variable), val, envir = bindings$scope)
+    name <- var_names[i]
+    if (length(var_names) == 0 || nchar(name) == 0) {
+      # we don't have a name so the expression should be a name and we are
+      # going for a positional value
+      variable <- bindings$bindings[[i]]
+      if (!is.name(variable)) stop(paste0("Positional variables cannot be expressions ",
+                                          deparse(variable), "\n"))
+      val <- .unpack(value[i])
+      assign(as.character(variable), val, envir = bindings$scope)
+
+    } else {
+      # if we have a name we also have an expression and we evaluate that in the
+      # environment of the value followed by the enclosing environment and assign
+      # the result to the name.
+      val <- eval(bindings$bindings[[i]], value_env)
+      assign(name, val, envir = bindings$scope)
+    }
+
   }
 }
 
