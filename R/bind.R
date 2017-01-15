@@ -56,13 +56,12 @@ bind <- function(...) {
 #'
 #' @export
 `%<-%` <- function(bindings, value) {
-  if (length(bindings$bindings) > length(value))
-    stop("More variables than values to bind.")
 
   var_names <- names(bindings$bindings)
   val_names <- names(value)
   has_names <- which(nchar(val_names) > 0)
   value_env <- list2env(as.list(value[has_names]), parent = bindings$scope)
+
 
   for (i in seq_along(bindings$bindings)) {
     name <- var_names[i]
@@ -79,10 +78,16 @@ bind <- function(...) {
       # if we have a name we also have an expression and we evaluate that in the
       # environment of the value followed by the enclosing environment and assign
       # the result to the name.
-      val <- eval(bindings$bindings[[i]], value_env)
-      assign(name, val, envir = bindings$scope)
+      assignment <- substitute(delayedAssign(name, expr,
+                                             eval.env = value_env,
+                                             assign.env = bindings$scope),
+                               list(expr = bindings$bindings[[i]]))
+      eval(assignment)
     }
 
   }
-}
 
+  for (name in var_names) {
+    if (nchar(name) > 0) force(bindings$scope[[name]])
+  }
+}
