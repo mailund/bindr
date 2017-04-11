@@ -1,5 +1,18 @@
 context("Bindings")
 
+test_that("we can return complex objects", {
+  f <- function() {
+    fit <- glm(qsec ~ ., data=mtcars)
+    return(list(fit, mtcars, nrow(mtcars)))
+  }
+
+  bind(model, df, size) %<-% f()
+  expect_is(model, "lm")
+  expect_is(model, "glm")
+  expect_is(df, "data.frame")
+  expect_equal(size, 32)      # mtcars sample is known to be 32 rows
+})
+
 test_that("we can bind values by position", {
   f <- function(x, y) c(x, y)
   g <- function(x, y) list(x, y)
@@ -13,6 +26,7 @@ test_that("we can bind values by position", {
   expect_equal(a, 1)
   expect_equal(b, 2)
   rm(a) ; rm(b)
+
 })
 
 test_that("we get an error if we try to bind too many variables", {
