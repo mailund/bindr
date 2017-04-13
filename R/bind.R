@@ -30,8 +30,6 @@ bind <- function(...) {
   structure(list(bindings = bindings, scope = scope), class = "bindings")
 }
 
-.unpack <- function(x) unname(unlist(x, use.names = FALSE))[1]
-
 #' Bind a `bind` object to values.
 #'
 #' Used to bind variables in the local scope to values, typically returned from
@@ -71,7 +69,7 @@ bind <- function(...) {
       variable <- bindings$bindings[[i]]
       if (!is.name(variable)) stop(paste0("Positional variables cannot be expressions ",
                                           deparse(variable), "\n"))
-      val <- .unpack(value[i])
+      val <- value[[i]]
       assign(as.character(variable), val, envir = bindings$scope)
 
     } else {
